@@ -42,12 +42,42 @@ local randomOperator
 local function AskQuestion()
 	-- generate 2 random numbers between a max. and a min. number
 	randomNumber1 = math.random(1, 20)
-	randomNumber2 = math.random(1, 20)
+	randomNumber2 = math.random(1, 20) 
+	randomOperator = math.random(1, 2)
+	if (randomOperator==1) then
 
-	correctAnswer = randomNumber1 + randomNumber2
+		correctAnswer = randomNumber1 + randomNumber2
 
--- create question in text object
-	questionObject.text = randomNumber1 .. " + " .. randomNumber2 .. " = "
+		-- create question in text object
+		questionObject.text = randomNumber1 .. " + " .. randomNumber2 .. " = "
+		
+	elseif (randomOperator==2) then
+		 correctAnswer = randomNumber1 - randomNumber2
+
+		 -- create question in text object
+		questionObject.text = randomNumber1 .. " - " .. randomNumber2 .. " = "
+		if (correctAnswer < 0) then
+			correctAnswer = randomNumber2 - randomNumber1
+			questionObject.text = randomNumber2 .. " - " .. randomNumber1 .. " = "
+		end
+	elseif (randomOperator==3) then
+
+		correctAnswer = randomNumber1 * randomNumber2
+
+		-- create question in text object
+		questionObject.text = randomNumber1 .. " * " .. randomNumber2 .. " = "
+
+	elseif (randomOperator==4) then
+
+		correctAnswer = randomNumber1 / randomNumber2
+
+		-- create question in text object
+		questionObject.text = randomNumber1 .. " / " .. randomNumber2 .. " = "
+	end
+
+
+	
+
 
 end
 
@@ -74,64 +104,14 @@ end
  		if (userAnswer == correctAnswer) then
  			correctObject.isVisible = true
  			timer.performWithDelay(2000, HideCorrect)
+ 			-- clear text field
+ 			event.target.text = ""
+ 			secondsLeft = totalSeconds
 
  			
  		end
  	end
  end
-
-----------------------------------------------------------------------------
-local function UpdateTime()
-
-	-- decrement the number of seeconds
-	secondsLeft = secondsLeft - 1
-
-	-- display the number of seconds left on the clock object
-	clockText.text = secondsLeft .. ""
-
-	if (secondsLeft == 0 ) then
-		-- reset the number of seconds left
-		secondsLeft = totalSeconds
-		lives = lives - 1
-
-		if (lives == 4 ) then
-		heart1.isVisible = true
-		heart2.isVisible = true
-		heart3.isVisible = true
-		heart4.isVisible = true
-	elseif (lives == 3 ) then 
-		heart1.isVisible = false
-		heart2.isVisible = true
-		heart3.isVisible = true
-		heart4.isVisible = true
-	elseif (lives == 2 ) then 
-		heart1.isVisible = false
-		heart2.isVisible = false
-		heart3.isVisible = true
-		heart4.isVisible = true
-	elseif (lives == 1 ) then 
-		heart1.isVisible = false
-		heart2.isVisible = false
-		heart3.isVisible = false
-		heart4.isVisible = true
-	elseif (lives == 0 ) then
-		heart1.isVisible = false
-		heart2.isVisible = false
-		heart3.isVisible = false
-		heart4.isVisible = false
-		
-		
-	end
-
-
-	end
-end
-
--- function that calls the timer
-local function StarterTimer()
-	-- create a countdown timer that loops infinitely
-	countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
-end
 
 --------------------------------------------------------------------------------
 local function UpdateHearts()
@@ -162,8 +142,38 @@ local function UpdateHearts()
 		heart4.isVisible = false
 		gameOver.isVisible = true
 		
+		numericField.isVisible = false
 	end
 end
+
+
+----------------------------------------------------------------------------
+local function UpdateTime()
+
+	-- decrement the number of seeconds
+	secondsLeft = secondsLeft - 1
+
+	-- display the number of seconds left on the clock object
+	clockText.text = secondsLeft .. ""
+
+	if (secondsLeft == 0 ) then
+		-- reset the number of seconds left
+		secondsLeft = totalSeconds
+		lives = lives - 1
+
+		AskQuestion()
+
+		UpdateHearts()
+		
+	end
+end
+
+-- function that calls the timer
+local function StarterTimer()
+	-- create a countdown timer that loops infinitely
+	countDownTimer = timer.performWithDelay( 1000, UpdateTime, 0)
+end
+
 
 --------------------------------------------------------------------------------
 --OBJECT CREATION
@@ -206,6 +216,11 @@ incorrectObject.isVisible = false
 clockText = display.newText( secondsLeft .. "", display.contentWidth/8, display.contentHeight/8, nil, 150 )
 correctObject:setTextColor(255/255, 250/255, 0/255)
 
+-- create game over
+gameOver = display.newImageRect("Images/gameOver.png", display.contentWidth, display.contentHeight)
+gameOver.isVisible = false
+gameOver.x = 500
+gameOver.y = 400
 
 -- Create numeric field
 numericField = native.newTextField( display.contentWidth/2, display.contentHeight/2, 150, 80 )
