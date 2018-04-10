@@ -35,6 +35,9 @@ local incorrectAnswer
 local incorrectObject
 local randomOperator
 
+-- Background sound
+local bkgMusic = audio.loadSound( "Sounds/bkgMusic.mp3" )
+local bkgMusicChanel1
 
 ----------------------------------------------------------------------------------
 --LOCAL FUNCTIONS
@@ -83,6 +86,9 @@ end
 
 local function HideCorrect()
 	correctObject.isVisible = false 
+	-- When the text is displayed add sound to the program
+bkgMusic = audio.play(bkgMusic)
+
 end
 
 
