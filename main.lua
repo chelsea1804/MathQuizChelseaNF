@@ -34,10 +34,14 @@ local correctAnswer
 local incorrectAnswer
 local incorrectObject
 local randomOperator
-
+-----------------------------------------------------------------------------
 -- Background sound
 local bkgMusic = audio.loadSound( "Sounds/bkgMusic.mp3" )
 local bkgMusicChanel1
+
+local wrongSound = audio.loadSound( "Sounds/wrongSound.mp3" )
+local wrongSound
+
 
 ----------------------------------------------------------------------------------
 --LOCAL FUNCTIONS
@@ -86,9 +90,9 @@ end
 
 local function HideCorrect()
 	correctObject.isVisible = false 
-	-- When the text is displayed add sound to the program
+	-- add sound to the program
 bkgMusic = audio.play(bkgMusic)
-
+wrongSound = audio.play(wrongSound)
 end
 
 
@@ -147,7 +151,8 @@ local function UpdateHearts()
 		heart3.isVisible = false
 		heart4.isVisible = false
 		gameOver.isVisible = true
-		
+		wrongSound = audio.play(wrongSound)
+
 		numericField.isVisible = false
 	end
 end
@@ -158,6 +163,8 @@ local function UpdateTime()
 
 	-- decrement the number of seeconds
 	secondsLeft = secondsLeft - 1
+
+	wrongSound = audio.play(wrongSound)
 
 	-- display the number of seconds left on the clock object
 	clockText.text = secondsLeft .. ""
